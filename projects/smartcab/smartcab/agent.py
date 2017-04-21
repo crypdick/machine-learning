@@ -39,7 +39,9 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        if self.epsilon < 0.01:
+        epsilon_decrease_amount = 0.003
+
+        if self.epsilon < 0.01:  # tolerance
             testing = True
 
         if testing:
@@ -47,7 +49,7 @@ class LearningAgent(Agent):
             self.alpha = 0
 
         else:
-            self.epsilon -= 0.05
+            self.epsilon -= epsilon_decrease_amount
             if self.epsilon < 0.0:
                 self.epsilon = 0.0
 
@@ -68,7 +70,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['oncoming'])#, inputs['left'], inputs['right'])
+        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
 
         return state
 
@@ -181,7 +183,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.7)
     
     ##############
     # Follow the driving agent
@@ -203,7 +205,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=10)
+    sim.run(n_test=20, tolerance=0.05)
 
 
 if __name__ == '__main__':
