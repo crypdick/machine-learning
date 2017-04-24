@@ -39,18 +39,18 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        epsilon_decrease_amount = 0.003
+        epsilon_decrease_amount = 0.0005
 
-        if self.epsilon < 0.01:  # tolerance
+        if self.epsilon < 0.01:  # sanity check
             testing = True
 
         if testing:
-            self.epsilon = 0
-            self.alpha = 0
+            self.epsilon = 0.
+            self.alpha = 0.
 
         else:
             self.epsilon -= epsilon_decrease_amount
-            if self.epsilon < 0.0:
+            if self.epsilon < 0.0:  # make sure eps never goes negative
                 self.epsilon = 0.0
 
         return None
@@ -205,7 +205,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=20, tolerance=0.05)
+    sim.run(n_test=20, tolerance=0.7)
 
 
 if __name__ == '__main__':
