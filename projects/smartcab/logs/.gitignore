@@ -1,2 +1,5 @@
 *
 !.gitignore
+!/sim_default-learning.csv
+!/sim_improved-learning.csv
+!/sim_no-learning.csv
