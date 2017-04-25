@@ -1,5 +1,5 @@
 import random
-import math
+from numpy import isclose as isclose
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
@@ -70,7 +70,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'])
+        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'] == 'forward')
 
         return state
 
@@ -82,8 +82,8 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        state_Qs = self.Q[state]
-        maxQ = max(state_Qs, key=state_Qs.get)
+        action_rewards = self.Q[state]
+        maxQ = max(action_rewards.values())
 
         return maxQ
 
@@ -121,7 +121,10 @@ class LearningAgent(Agent):
             if draw <= self.epsilon:  # choose random action with epsilon probability
                 action = random.choice(self.valid_actions)
             else:
-                action = self.get_maxQ(self.state)  # highest Q val
+                max_reward_value = self.get_maxQ(self.state)  # highest Q val in this state
+                # chooses a random reward if there is a tie for maxQ(state_i)
+                best_actions = [a for a, v in self.Q[state].iteritems() if isclose(v, max_reward_value)]
+                action = random.choice(best_actions)
 
         ########### 
         ## TO DO ##
